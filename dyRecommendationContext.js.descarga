@@ -1,0 +1,66 @@
+var typeDY= "OTHER";
+var data=[];
+var lang='';
+var urlDY = window.location.href;
+var valores= window.location.search;
+const urlParams = new URLSearchParams(valores);
+if (/\/[a-z][a-z]\/home\.jsp.*/.test(urlDY))  typeDY = "HOMEPAGE";
+if (/\/[a-z][a-z]\/hotel\/[a-zA-Z\-]+\/[a-zA-Z\-]+\/(hotel|clubhotel)[a-zA-Z\-]+\/(|index\.jsp)/.test(urlDY))  typeDY = "PRODUCT";
+if (/\/[a-z][a-z]\/hotel\/[a-zA-Z\-]+\/[a-zA-Z\-]+\/index\.jsp/.test(urlDY)) typeDY = "OTHER";
+if (/\/[a-z][a-z]\/hotel\/index\.jsp.*/.test(urlDY))   typeDY = "PRODUCT";
+if (/\/[a-z][a-z]\/rooms\.jsp.*/.test(urlDY)) { 
+     typeDY = "CATEGORY";
+     var search = urlParams.get('search');
+     var data_json = JSON.parse(search);
+     data.push(data_json['paisDestino.pais']);
+     data.push(data_json['paisDestino.destino_name']);
+}
+if (/\/[a-z][a-z]\/checkout.*/.test(urlDY)) {
+     typeDY = "CART";
+     var valorar= urlParams.get('valorar');
+     var data_json = JSON.parse(valorar);
+     data.push(data_json['idRiuHotel'] + '_' + "ES");
+}
+try{
+
+	const pattern = /\/([a-z]{2})\//;
+	const regex = new RegExp(pattern);
+	const url = window.location.href;
+	const match2 = url.match(pattern);
+	var idioma = match2[1];
+}catch(error){
+  idioma = 'en';
+}
+
+switch (idioma) {
+  case 'es':
+    lang='es_ES';
+    break;
+  case 'de':
+    lang='de_DE';
+    break;
+  case 'it':
+    lang='it_IT';
+    break;
+  case 'pt':
+    lang='pt_PT';
+    break;
+  case 'nl':
+    lang='nl_NL';
+    break;
+  case 'ru':
+    lang='ru_RU';
+    break;
+  case 'zh':
+    lang='zh_CN';
+    break;
+  case 'fr':
+    lang='fr_FR';
+    break;  
+  default:
+    case 'en':
+    lang='en_GB';
+    break;
+}
+window.DY = window.DY || {}; 
+DY.recommendationContext = { type: typeDY, data: data,  lng:lang };
